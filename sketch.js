@@ -7,21 +7,8 @@ const pointsToConnect = [
   11, 72, 73, 74, 184
 ];
 
-if (typeof ml5 === "undefined") {
-  console.error("ml5.js 未正確加載，請檢查 index.html 中的引用路徑。");
-} else {
-  console.log("ml5.js 已成功加載！");
-}
-
 function setup() {
   createCanvas(400, 400);
-
-  // 檢查 ml5 是否已加載
-  if (typeof ml5 === "undefined") {
-    console.error("ml5.js 未正確加載，請檢查 index.html 中的引用路徑。");
-    return;
-  }
-
   video = createCapture(VIDEO);
   video.size(width, height);
   video.hide();
@@ -49,8 +36,18 @@ function drawFacemesh() {
     strokeWeight(5); // 線條粗細為 5
     noFill();
 
+    // 繪製嘴巴外部輪廓
     beginShape();
-    for (let i = 0; i < pointsToConnect.length; i++) {
+    for (let i = 0; i < 12; i++) { // 外嘴唇的前 12 個點
+      const index = pointsToConnect[i];
+      const [x, y] = keypoints[index];
+      vertex(x, y);
+    }
+    endShape(CLOSE);
+
+    // 繪製嘴巴內部輪廓
+    beginShape();
+    for (let i = 12; i < pointsToConnect.length; i++) { // 內嘴唇的後 12 個點
       const index = pointsToConnect[i];
       const [x, y] = keypoints[index];
       vertex(x, y);
